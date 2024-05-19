@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Col, Row } from 'antd';
 import './App.css';
+import ManualControlSection from './components/ManualControlSection';
+import QrCodeSection from './components/QrCodeSection';
+import RobotSection from './components/RobotSection';
+import RobotStatesSection from './components/RobotStatesSection';
+import RouteSection from './components/RouteSection';
+import MapSection from './components/MapSection';
+import CommandListSection from './components/CommandListSection';
+import ManualControlJoystick from './components/ManualControlSection copy';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Row style={{ fontSize: "20px" }}>
+      <Col span={6}>
+        <QrCodeSection />
+        <RouteSection />
+        <RobotSection />
+      </Col>
+      <Col span={12}>
+        <MapSection />
+      </Col>
+      <Col style={{ marginLeft: "4em" }} span={5}>
+        <CommandListSection />
+        {/* <ManualControlSection /> */}
+        <ManualControlJoystick/>
+        <RobotStatesSection />
+      </Col>
+    </Row>
   );
 }
 
