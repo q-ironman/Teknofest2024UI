@@ -9,7 +9,7 @@ function calculateAngle(y:any,x:any){
     return (Math.atan2(y, x) * 180) / Math.PI;
 }
 export default function ManualControlJoystick({ }: Props) {
-    var {PostAsync} = useFetch("https://localhost:44353")
+    var {PostAsync} = useFetch()
     const [startX,setStartX] =React.useState(0);
     const [startY,setStartY] = React.useState(0);
     const baseColor = 'radial-gradient(circle at 50% 50%, rgba(100,100,100,1), rgba(100,100,100,1), rgba(100,100,100,1),  rgba(5,5,5,1))';

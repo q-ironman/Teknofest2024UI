@@ -1,7 +1,7 @@
-export default function useFetch(baseUrl: any) {
+export default function useFetch() {
     const PostAsync = async (body: any, endpoint: any) => {
         try {
-            var res = await fetch(baseUrl + endpoint, {
+            var res = await fetch(process.env.REACT_APP_API_URL + endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

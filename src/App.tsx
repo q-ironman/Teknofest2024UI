@@ -7,7 +7,7 @@ import RobotStatesSection from './components/RobotStatesSection';
 import RouteSection from './components/RouteSection';
 import MapSection from './components/MapSection';
 import CommandListSection from './components/CommandListSection';
-import ManualControlJoystick from './components/ManualControlSection copy';
+import ManualControlJoystick from './components/ManualControlSectionJoystick';
 
 function App() {
   return (
