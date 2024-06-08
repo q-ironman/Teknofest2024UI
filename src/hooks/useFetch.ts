@@ -14,7 +14,19 @@ export default function useFetch() {
             return error.message
         }
     }
+    const GetAsync = async (endpoint:any) => {
+        debugger
+        try {
+            var res = await fetch(process.env.REACT_APP_API_URL+endpoint,{
+                method:"GET"
+            })
+            return res;
+        } catch (error:any) {
+            return error.message
+        }
+    } 
     return {
-        PostAsync
+        PostAsync,
+        GetAsync
     }
 }

@@ -1,10 +1,12 @@
 import { Card, Col, Row, Typography } from 'antd'
-
+import ApplicationContext from '../ApplicationContext'
+import * as React from "react"
 interface Props {
 
 }
 
 export default function RobotSection({ }: Props) {
+    const pageContext = React.useContext(ApplicationContext)
     return (
         <Card title="DEĞİŞKENLER" style={{ border:"2px solid #8AA6A3"}}>
             <Row justify={'space-around'}>

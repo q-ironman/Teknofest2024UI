@@ -1,10 +1,12 @@
 import { Card, Col, Row, Typography } from 'antd'
-
+import * as React from "react"
+import ApplicationContext from '../ApplicationContext'
 interface Props {
 
 }
 
 const QrCodeSection = (props: Props) => {
+    var pageContext = React.useContext(ApplicationContext);
     return (
         <Card title="QRKOD X BİLGİLERİ" style={{ border: "2px solid #8AA6A3" }}>
             <Row justify={'space-between'} >
@@ -15,7 +17,7 @@ const QrCodeSection = (props: Props) => {
                         </strong>
                     </Typography.Text>
                     <Typography.Text className='text'>
-                        Value 1
+                        {pageContext.qrInfo?.Name ?? "Başlangıç"}
                     </Typography.Text>
                 </Col>
                 <Col span={12}>
@@ -25,7 +27,7 @@ const QrCodeSection = (props: Props) => {
                         </strong>
                     </Typography.Text>
                     <Typography.Text className='text'>
-                        Value 2
+                        {pageContext.qrInfo?.X ?? "Başlangıç"}
                     </Typography.Text>
                 </Col>
                 <Col span={12}>
@@ -35,7 +37,7 @@ const QrCodeSection = (props: Props) => {
                         </strong>
                     </Typography.Text>
                     <Typography.Text className='text'>
-                        Value 1
+                        {pageContext.qrInfo?.Y ?? "Başlangıç"}
                     </Typography.Text>
                 </Col>
                 <Col span={12}>
