@@ -13,12 +13,16 @@ const CommandListSection = (props: Props) => {
         var res = await pageContext.sendEmptyTourCommandAsync();
         console.log(res)
     }
+    const startTourButtonOnClick = async () => {
+        var res = await pageContext.sendRouteInfoAsync()
+        pageContext.setRoutePoints(res);
+    }
     return (
         <Card title="KOMUT LISTESI" style={{ border: "2px solid #8AA6A3", marginLeft: "5px" }}>
             <Flex vertical gap={"small"}>
                 <Button onClick={emergencyStopButtonOnClick} className='text' type='primary' danger block>ACIL STOP</Button>
                 <Button className='text' block>SIFIRLA</Button>
-                <Button className='text' block>TURU BAŞLAT</Button>
+                <Button onClick={startTourButtonOnClick} className='text' block>TURU BAŞLAT</Button>
                 <Button onClick={emptyTourButtonOnClick} className='text' block>BOŞ TUR</Button>
             </Flex>
         </Card>

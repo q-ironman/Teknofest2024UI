@@ -9,7 +9,7 @@ export default function useFetch() {
                 },
                 body : JSON.stringify(body)
             });
-            return res
+            return await res.json();;
         } catch (error:any) {
             return error.message
         }

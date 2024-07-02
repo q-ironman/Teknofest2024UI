@@ -1,6 +1,6 @@
 enum RequestMessageTypes {
     SendQrInfoRequestMessage = "SendQrInfoRequestMessage",
-    //CollectTelemetryRequestMessage = "CollectTelemetryRequestMessage"
+    CollectTelemetryRequestMessage = "CollectTelemetryRequestMessage"
 }
 
 export default RequestMessageTypes

@@ -7,6 +7,9 @@ interface Props {
 
 export default function RobotSection({ }: Props) {
     const pageContext = React.useContext(ApplicationContext)
+    React.useEffect(() => {
+        console.log(pageContext.telemetryData)
+    },[])
     return (
         <Card title="DEĞİŞKENLER" style={{ border:"2px solid #8AA6A3"}}>
             <Row justify={'space-around'}>
@@ -56,7 +59,7 @@ export default function RobotSection({ }: Props) {
                 <Col span={11} >
                     <Row justify={'space-between'}>
                         <Typography.Text className='text'><strong>Sıcaklık:</strong></Typography.Text>
-                        <Typography.Text>45</Typography.Text>
+                        <Typography.Text>{pageContext.telemetryData?.HeatTelemetry?.ArduinoHeat}</Typography.Text>
                     </Row>
                 </Col>
                 <Col span={11}>
