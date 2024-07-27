@@ -9,6 +9,7 @@ import MapSection from './components/MapSection';
 import CommandListSection from './components/CommandListSection';
 import ManualControlJoystick from './components/ManualControlSectionJoystick';
 import { ApplicationContextProvider } from './ApplicationContext';
+import ControlPanel from './components/ControlPanel';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           {/* <ManualControlSection /> */}
           <ManualControlJoystick />
           <RobotStatesSection />
+          <ControlPanel/>
         </Col>
       </Row>
     </ApplicationContextProvider>

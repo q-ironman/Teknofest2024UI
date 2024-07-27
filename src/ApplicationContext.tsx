@@ -1,8 +1,8 @@
+import { message } from "antd"
 import * as React from "react"
+import Points from "../src/components/mapData.json"
 import useFetch from "./hooks/useFetch"
 import RequestMessageTypes from "./model/RequestMesageTypes"
-import { message } from "antd"
-import Points from "../src/components/mapData.json"
 
 export interface IApplicationContext {
     qrInfo: any,
@@ -22,14 +22,22 @@ export interface IApplicationContext {
     setMapData: (data?: any) => void,
     obstaclePointCloud: any,
     setObstaclePointCloud: (data?: any) => void,
-    loadingNode: any;
-    setLoadingNode: (data?: any) => void;
-    unloadingNode: any;
-    setUnloadingNode: (data?: any) => void;
-    currentLoadingNode: any;
-    setCurrentLoadingNode: (data?: any) => void;
-    currentUnloadingNode: any;
-    setCurrentUnloadingNode: (data?: any) => void;
+    loadingNode: any,
+    setLoadingNode: (data?: any) => void,
+    unloadingNode: any,
+    setUnloadingNode: (data?: any) => void,
+    currentLoadingNode: any,
+    setCurrentLoadingNode: (data?: any) => void,
+    currentUnloadingNode: any,
+    setCurrentUnloadingNode: (data?: any) => void,
+    controlPanelData: any,
+    setControlPanelData: (data?: any) => void,
+    sendControlPanelData:() => void,
+    isEmergencyActive:boolean,
+    setIsEmergencyActive:(data:boolean)=>void,
+    sendLiftLoadCommandAsync:() => Promise<void>,
+    isLiftLoadActive:boolean,
+    setIsLiftLoadActive:(data?:boolean) => void
 }
 
 export interface IApplicationContextProviderProps {
@@ -48,6 +56,9 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
     const [obstaclePointCloud, setObstaclePointCloud] = React.useState<any[] | undefined>(undefined);
     const [currentLoadingNode, setCurrentLoadingNode] = React.useState<any | undefined>(undefined);
     const [currentUnloadingNode, setCurrentUnloadingNode] = React.useState<any | undefined>(undefined);
+    const [controlPanelData, setControlPanelData] = React.useState<any>(undefined);
+    const [isEmergencyActive,setIsEmergencyActive] = React.useState<boolean>(false);
+    const [isLiftLoadActive,setIsLiftLoadActive] = React.useState<boolean>(false);
 
     const [loadingNode, setLoadingNode] = React.useState<any | undefined>(undefined);
     const [unloadingNode, setUnloadingNode] = React.useState<any | undefined>(undefined);
@@ -59,7 +70,7 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
             message.error("Rota bilgileri eksik");
             return null;
         }
-    
+
         let requestMessage = {
             direction: currentDirection,
             loadingNode: currentLoadingNode,
@@ -67,7 +78,7 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
             command: currentRoute,
         };
         console.log(requestMessage);
-    
+
         try {
             const response = await PostAsync(requestMessage, "/api/StartCommand");
             return response;
@@ -77,11 +88,39 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
         }
     }
     const sendEmergencyBrakeCommandAsync = async () => {
+        if(isEmergencyActive){
+            setIsEmergencyActive(false)
+            return await GetAsync("/api/CancelEmergency")
+        }
+        setIsEmergencyActive(true);
         return await GetAsync("/api/MakeEmergencyBrake")
     }
-
+    const sendLiftLoadCommandAsync = async () => {
+        if(isLiftLoadActive){
+            setIsLiftLoadActive(false)
+            return await GetAsync("/api/CancelManualLift")
+        }
+        setIsLiftLoadActive(true);
+        return await GetAsync("/api/SetManualLift")
+    }
     const sendEmptyTourCommandAsync = async () => {
-        return await GetAsync("/api/EmptyTour")
+        if (!currentDirection || !currentRoute) {
+            message.error("Rota bilgileri eksik");
+            return null;
+        }
+
+        let requestMessage = {
+            direction: currentDirection,
+            startPoint: currentRoute[0]?.value,
+        };
+
+        try {
+            const response = await PostAsync(requestMessage, "/api/EmptyTour");
+            return response;
+        } catch (error) {
+            console.error("Error sending route info:", error);
+            return null;
+        }
     }
     const processWQrInfoData = (data: any) => {
         console.log(data)
@@ -122,6 +161,9 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
                 break;
         }
     }
+    const sendControlPanelData = async () => {
+        await PostAsync(controlPanelData,"/api/ControlPanel")
+    }
     const defaultContext = {
         qrInfo,
         setQrInfo,
@@ -140,14 +182,22 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
         setMapData,
         obstaclePointCloud,
         setObstaclePointCloud,
-        currentLoadingNode, 
+        currentLoadingNode,
         setCurrentLoadingNode,
-        currentUnloadingNode, 
+        currentUnloadingNode,
         setCurrentUnloadingNode,
-        loadingNode, 
+        loadingNode,
         setLoadingNode,
         unloadingNode,
-        setUnloadingNode
+        setUnloadingNode,
+        controlPanelData,
+        setControlPanelData,
+        sendControlPanelData,
+        isEmergencyActive,
+        setIsEmergencyActive,
+        sendLiftLoadCommandAsync,
+        isLiftLoadActive,
+        setIsLiftLoadActive
     } as IApplicationContext
 
     React.useEffect(() => {

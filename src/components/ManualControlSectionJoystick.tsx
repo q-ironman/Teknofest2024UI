@@ -15,20 +15,21 @@ export default function ManualControlJoystick({ }: Props) {
     const baseColor = 'radial-gradient(circle at 50% 50%, rgba(100,100,100,1), rgba(100,100,100,1), rgba(100,100,100,1),  rgba(5,5,5,1))';
     const stickColor = 'radial-gradient(circle at 50% 50%, rgba(70,70,70,1), rgba(70,70,70,1), rgba(5,5,5,1))';
     const sendManualControlData = async (y:any,x:any) => {
-        var angle = calculateAngle(y,x);
+        let angle = calculateAngle(y,x);
+        let radius = Math.sqrt(y*y+x*x);
         if(angle >=0){
-            var res = await PostAsync({Angle:angle},"/api/ManualControl")
+            var res = await PostAsync({angle:angle,radius:radius},"/api/ManualControl")
         }
     }
     const handleMove =  async (e:any) => {
         e.x= e.x*100;
         e.y = e.y*100;
-        if (Math.abs(e.x) > 65){
+        if (Math.abs(e.x) > 45){
             setStartX((oldX) => oldX + 35);
             console.log(e.x-startX);
             sendManualControlData(e.y,e.x);
         }
-        if(e.y  > 65){
+        if(e.y  > 45){
             setStartY((oldY) => oldY + 35)
             console.log(e.y-startY)
             sendManualControlData(e.y,e.x);
