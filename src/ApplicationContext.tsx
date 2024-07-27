@@ -21,7 +21,15 @@ export interface IApplicationContext {
     mapData: any,
     setMapData: (data?: any) => void,
     obstaclePointCloud: any,
-    setObstaclePointCloud: (data?: any) => void
+    setObstaclePointCloud: (data?: any) => void,
+    loadingNode: any;
+    setLoadingNode: (data?: any) => void;
+    unloadingNode: any;
+    setUnloadingNode: (data?: any) => void;
+    currentLoadingNode: any;
+    setCurrentLoadingNode: (data?: any) => void;
+    currentUnloadingNode: any;
+    setCurrentUnloadingNode: (data?: any) => void;
 }
 
 export interface IApplicationContextProviderProps {
@@ -38,16 +46,35 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
     const [routePoints, setRoutePoints] = React.useState<any | undefined>(undefined);
     const [mapData, setMapData] = React.useState<any[] | undefined>(Points);
     const [obstaclePointCloud, setObstaclePointCloud] = React.useState<any[] | undefined>(undefined);
+    const [currentLoadingNode, setCurrentLoadingNode] = React.useState<any | undefined>(undefined);
+    const [currentUnloadingNode, setCurrentUnloadingNode] = React.useState<any | undefined>(undefined);
 
+    const [loadingNode, setLoadingNode] = React.useState<any | undefined>(undefined);
+    const [unloadingNode, setUnloadingNode] = React.useState<any | undefined>(undefined);
     const { PostAsync, GetAsync } = useFetch();
     const [ws, Setws] = React.useState(null)
 
     const sendRouteInfoAsync = async () => {
-        if (!currentDirection || !currentRoute) {
-            message.error("Rota bilgileri eksik")
+        if (!currentDirection || !currentRoute || !currentLoadingNode || !currentUnloadingNode) {
+            message.error("Rota bilgileri eksik");
+            return null;
         }
-        let requestMessage = { direction: currentDirection, command: currentRoute }
-        return await PostAsync(requestMessage, "/api/StartCommand")
+    
+        let requestMessage = {
+            direction: currentDirection,
+            loadingNode: currentLoadingNode,
+            unloadingNode: currentUnloadingNode,
+            command: currentRoute,
+        };
+        console.log(requestMessage);
+    
+        try {
+            const response = await PostAsync(requestMessage, "/api/StartCommand");
+            return response;
+        } catch (error) {
+            console.error("Error sending route info:", error);
+            return null;
+        }
     }
     const sendEmergencyBrakeCommandAsync = async () => {
         return await GetAsync("/api/MakeEmergencyBrake")
@@ -112,7 +139,15 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
         mapData,
         setMapData,
         obstaclePointCloud,
-        setObstaclePointCloud
+        setObstaclePointCloud,
+        currentLoadingNode, 
+        setCurrentLoadingNode,
+        currentUnloadingNode, 
+        setCurrentUnloadingNode,
+        loadingNode, 
+        setLoadingNode,
+        unloadingNode,
+        setUnloadingNode
     } as IApplicationContext
 
     React.useEffect(() => {

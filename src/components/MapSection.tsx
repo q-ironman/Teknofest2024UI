@@ -17,8 +17,8 @@ const MapSection: React.FC = () => {
         alert(`Circle ${index} clicked`);
     };
     function getGuıd() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
@@ -36,32 +36,64 @@ const MapSection: React.FC = () => {
         setObstacleStateCircle(circleArr);
     }
     function getPathLines() {
+        if (!pageContext.routePoints || pageContext.routePoints?.length <= 0) {
+            return;
+        }
         var lineArr: any[] = [];
         for (let index = 0; index < pageContext.routePoints?.length - 1; index++) {
             const current = pageContext.mapData.find((k: any) => k.Label === pageContext.routePoints[index]);
             const next = pageContext.mapData.find((k: any) => k.Label === pageContext.routePoints[index + 1]);
-            if (current.Y != next.Y && current.X == next.X) {
+            if (current.Y !== next.Y && current.X === next.X) {
                 lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
             }
-            if (current.X != next.X && current.Y === next.Y) {
+            if (current.X !== next.X && current.Y === next.Y) {
                 lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
             }
             else {
                 if (current.X > next.X && current.Y < next.Y) {
-                    lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
-                    lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    
+                    if (current.X < 10) {
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+                    else {
+                        lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+
                 }
                 if (current.X < next.X && current.Y < next.Y) {
-                    lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
-                    lineArr.push(<Line points={[current.X / 20 + 10, next.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    if (current.Y<10) {
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+                    else {
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, next.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
                 }
                 if (current.X < next.X && current.Y > next.Y) {
-                    lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
-                    lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+
+                    if (next.Y < 10) {
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, next.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+                    else{
+                        lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+                    
+
                 }
                 if (current.X > next.X && current.Y > next.Y) {
-                    lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
-                    lineArr.push(<Line points={[current.X / 20 + 10, next.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    if(next.Y<10){
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, current.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, next.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
+                    else{
+                        lineArr.push(<Line points={[next.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, next.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                        lineArr.push(<Line points={[current.X / 20 + 10, current.Y / 20 + 10, next.X / 20 + 10, current.Y / 20 + 10]} stroke="red" strokeWidth={2} />)
+                    }
                 }
             }
 

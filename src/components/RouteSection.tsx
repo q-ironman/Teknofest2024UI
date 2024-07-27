@@ -13,11 +13,22 @@ const routeNodes = [
     { label: "C", value: "Q38" },
     { label: "D", value: "Q33" },
 ];
+
 const robotDirections = [
     { label: "İleri", value: "F" },
     { label: "Sağ", value: "R" },
     { label: "Sol", value: "L" },
-]
+];
+
+const loadingNodes = [
+    { label: "A", value: "Q50" },
+    { label: "D", value: "Q33" },
+];
+
+const unloadingNodes = [
+    { label: "B", value: "Q45" },
+    { label: "C", value: "Q38" },
+];
 export default function RouteSection(props: Props) {
     const pageContext = React.useContext(ApplicationContext);
     const [selectedNodeLabel, setSelectedNodeLabel] = React.useState<any | undefined>(undefined);
@@ -65,34 +76,71 @@ export default function RouteSection(props: Props) {
 
     return (
         <Card title="ROTA BELİRLEME" style={{ border: "2px solid #8AA6A3" }}>
-            <Row justify={'space-between'}>
+            <Row justify="space-between">
                 <Col span={11}>
                     <Form.Item label={<Typography.Text className='text'>Nokta</Typography.Text>}>
-                        <Select value={selectedNodeLabel} onChange={(value, option) => { setSelectedNodeLabel(value); setSelectedNode(option) }} size='middle' options={routeNodes} />
+                        <Select 
+                            value={selectedNodeLabel} 
+                            onChange={(value, option) => {
+                                setSelectedNodeLabel(value); 
+                                setSelectedNode(option);
+                            }} 
+                            size='middle' 
+                            options={routeNodes} 
+                        />
                     </Form.Item>
                 </Col>
                 <Col span={4}>
-                    <Button onClick={() => onAddButtonClick()}>Ekle</Button>
+                    <Button onClick={onAddButtonClick}>Ekle</Button>
                 </Col>
                 <Col span={4}>
-                    <Button onClick={() => onRemoveButtonClick()}>Sil</Button>
+                    <Button onClick={onRemoveButtonClick}>Sil</Button>
                 </Col>
                 <Col span={4}>
-                    <Button onClick={() => onResetButtonClick()}>Sıfırla</Button>
+                    <Button onClick={onResetButtonClick}>Sıfırla</Button>
                 </Col>
             </Row>
             <Row>
                 <Col span={11}>
                     <Form.Item label={<Typography.Text className='text'>Robot Yönü</Typography.Text>}>
-                        <Select options={robotDirections} value={pageContext.currentDirection} onChange={(value) => pageContext.setCurrentDirection(value)} />
+                        <Select 
+                            options={robotDirections} 
+                            value={pageContext.currentDirection} 
+                            onChange={pageContext.setCurrentDirection} 
+                        />
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row justify="space-between">
+                <Col span={11}>
+                    <Form.Item label={<Typography.Text className='text'>Yükleme Noktaları</Typography.Text>}>
+                        <Select 
+                            mode='multiple'
+                            value={pageContext.currentLoadingNode} 
+                            onChange={(value, option) => { 
+                                pageContext.setCurrentLoadingNode(value); 
+                            }} 
+                            size='middle' 
+                            options={loadingNodes} 
+                        />
+                    </Form.Item>
+                </Col>
+                <Col span={11}>
+                    <Form.Item label={<Typography.Text className='text'>Boşaltma Noktaları</Typography.Text>}>
+                        <Select 
+                            mode='multiple'
+                            value={pageContext.currentUnloadingNode} 
+                            onChange={(value, option) => { 
+                                pageContext.setCurrentUnloadingNode(value); 
+                            }} 
+                            size='middle' 
+                            options={unloadingNodes} 
+                        />
                     </Form.Item>
                 </Col>
             </Row>
             <Row>
-                <Typography.Text>
-                    {routeText}
-                </Typography.Text>
-
+                <Typography.Text>{routeText}</Typography.Text>
             </Row>
         </Card>
     )
