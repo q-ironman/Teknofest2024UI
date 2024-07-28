@@ -37,7 +37,9 @@ export interface IApplicationContext {
     setIsEmergencyActive:(data:boolean)=>void,
     sendLiftLoadCommandAsync:() => Promise<void>,
     isLiftLoadActive:boolean,
-    setIsLiftLoadActive:(data?:boolean) => void
+    setIsLiftLoadActive:(data?:boolean) => void,
+    robotStates:any,
+    setRobotStates:(data?:any) => void
 }
 
 export interface IApplicationContextProviderProps {
@@ -56,9 +58,10 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
     const [obstaclePointCloud, setObstaclePointCloud] = React.useState<any[] | undefined>(undefined);
     const [currentLoadingNode, setCurrentLoadingNode] = React.useState<any | undefined>(undefined);
     const [currentUnloadingNode, setCurrentUnloadingNode] = React.useState<any | undefined>(undefined);
-    const [controlPanelData, setControlPanelData] = React.useState<any>(undefined);
+    const [controlPanelData, setControlPanelData] = React.useState<any>({innerLedActive:false ,outerLedActive:false, fanActive:false});
     const [isEmergencyActive,setIsEmergencyActive] = React.useState<boolean>(false);
     const [isLiftLoadActive,setIsLiftLoadActive] = React.useState<boolean>(false);
+    const [robotStates,setRobotStates] = React.useState<any>(undefined);
 
     const [loadingNode, setLoadingNode] = React.useState<any | undefined>(undefined);
     const [unloadingNode, setUnloadingNode] = React.useState<any | undefined>(undefined);
@@ -132,7 +135,15 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
             }
             return k;
         }));
-
+        if(routePoints && routePoints?.length>0){
+            let idx = routePoints?.findIndex((k:any) => data.Name === k);
+            
+            if(idx >= routePoints?.length-1 ){
+                return;
+            }
+            console.log("nextNode",routePoints[idx+1])
+            setTelemetryData({...telemetryData,nextNode:routePoints[idx+1]});
+        }
     }
     function processTelemtryData(data: any) {
         console.log(data)
@@ -142,7 +153,10 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
     function processListData(data: any) {
         console.log(data)
         setObstaclePointCloud(data.Points)
-
+    }
+    function proccesStateData (data:any){
+        console.log(data);
+        setRobotStates(data);
     }
     const processSocketData = (message: any) => {
         var deserializedMessage = JSON.parse(message);
@@ -156,6 +170,9 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
                 break;
             case RequestMessageTypes.DrawObstacleRequestMessage:
                 processListData(deserializedMessage.Data)
+                break;
+            case RequestMessageTypes.RobotStatesRequestMessage:
+                proccesStateData(deserializedMessage.Data)
                 break;
             default:
                 break;
@@ -197,7 +214,9 @@ export const ApplicationContextProvider = (props: IApplicationContextProviderPro
         setIsEmergencyActive,
         sendLiftLoadCommandAsync,
         isLiftLoadActive,
-        setIsLiftLoadActive
+        setIsLiftLoadActive,
+        robotStates,
+        setRobotStates
     } as IApplicationContext
 
     React.useEffect(() => {

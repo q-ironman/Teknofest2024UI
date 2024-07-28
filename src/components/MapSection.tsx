@@ -127,7 +127,7 @@ const MapSection: React.FC = () => {
                                 y={pos.Y / 20 + 10}
                                 radius={circleRadius}
                                 fill="red"
-                                onClick={() => handleClick(index)}
+                                onClick={() => handleClick(pos.Label)}
                             />
                         )
                     }
